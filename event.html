@@ -1,0 +1,188 @@
+
+
+<html lang="en">
+    <head>
+        <title>CODAGE CONTEST</title>
+    </head>
+
+    <style>
+        body {
+            background-color: #f0f8ff; 
+            padding: 50px;
+            margin-top: 2px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        td {
+            font-size: 25px;
+            color: darkblue;
+            
+        }
+        .f
+        {
+            background-color:lightgoldenrodyellow;
+        }
+
+        h1 {
+            color: darkred; 
+            
+        }
+
+        input[type="text"], input[type="email"], select 
+        {
+            padding: 15px;
+            width: 100%;
+            font-size: 18px;
+            color: black; 
+            background-color: bisque;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            
+        }
+        
+        select:hover
+        {
+            background-color: #f5f5dc;
+            cursor: pointer;
+        }
+       
+
+        option:nth-child(3) 
+        {
+            color: black; 
+            background-color: lightgray;
+        }
+
+        table 
+        {
+            width: 70%; 
+            margin-left: auto;
+            margin-right: auto;
+            letter-spacing: 1px;
+            border-spacing: 20px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        input:focus {
+            background-color: #f0fff4; /* Soft mint green */
+            border-color: #28a745; /* Vibrant green border */
+            
+            color: #333; 
+        }
+
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin-top: 10px;
+            width: 100%;
+            cursor: pointer;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #218838;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        input[type="submit"]:active {
+            opacity: 0.7;
+        }
+    </style>
+
+    <body>
+        <h1 style="text-align: center;">CODAGE CONTEST</h1>
+        <h1 style="text-align: center;">ORGANISED BY CSM DEPARTMENT</h1>
+
+        <form action="https://google.com/" target="_blank">
+            <table>
+                <tr>
+                    <td><strong>YOUR NAME</strong></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="Name" maxlength="20" required placeholder="Full Name"></td>
+                </tr>
+
+                <tr>
+                    <td><strong>Regd. No (1st person)</strong></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="No" maxlength="8" required placeholder="reg.no"></td>
+                </tr>
+
+                <tr>
+                    <td><strong>Department</strong></td>
+                </tr>
+                <tr>
+                    <td>
+                        <select required>
+                            <option selected disabled style="text-align: center;">SELECT BRANCH</option>
+                            <option class="f">CSE</option>
+                            <option class="f">CSM</option>
+                            <option class="f">CSD</option>
+                            <option class="f">CSBS</option>
+                            <option class="f">ECE</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><strong>Name (2nd person)</strong></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="Name2" maxlength="20" required placeholder="Name"></td>
+                </tr>
+
+                <tr>
+                    <td><strong>Regd. No (2nd person)</strong></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="No2" maxlength="8" required placeholder="Reg.no"></td>
+                </tr>
+
+                <tr>
+                    <td><strong>Department</strong></td>
+                </tr>
+                <tr>
+                    <td>
+                        <select required>
+                            <option selected disabled style="text-align: center;">SELECT BRANCH</option>
+                            <option class="f">CSE</option>
+                            <option class="f">CSM</option>
+                            <option class="f">CSD</option>
+                            <option class="f">CSBS</option>
+                            <option class="f">ECE</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><strong>Email (any one)</strong></td>
+                </tr>
+                <tr>
+                    <td><input type="email" name="mail" required placeholder="email"></td>
+                </tr>
+
+                <tr>
+                    <td><strong>Mobile number (any one)</strong></td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="no" maxlength="10" required placeholder="number"></td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <input type="submit" value="REGISTER">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </body>
+</html>
