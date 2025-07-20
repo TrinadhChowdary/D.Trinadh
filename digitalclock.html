@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Digital Clock</title>
+        <style>
+            body 
+            {
+                background-color: bisque;
+                text-align: center;
+                align-items: center;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+            #clockdisp 
+            {
+                font-size: 40px;
+                color: blue;
+                font-weight: bold;
+                background-color: lightyellow;
+            }
+            #daysContainer 
+            {
+                display: flex;
+                gap: 10px;
+                margin-top: 10px;
+                font-size: 20px;
+            }
+            .day 
+            {
+                padding: 5px 10px;
+                border-radius: 5px;
+                color: darkblue;
+                background-color: lightgray;
+            }
+            .active-day 
+            {
+                background-color: yellow;
+                color: black;
+                font-weight: bold;
+            }
+            #dateDisplay 
+            {
+                font-size: 20px;
+                margin-top: 10px;
+                color: darkred;
+                font-weight: bold;
+            }
+            .dateContainer 
+            {
+                display: flex;
+                justify-content: center;
+                gap: 20px; 
+                margin-top: 10px;
+            }
+            .dateItem 
+            {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                font-size: 25px;
+                color: darkred;
+                font-weight: bold;
+            }
+            .label
+            {
+                font-weight: bold;
+                margin-top: 2px;
+                color:black;  
+            }
+
+        </style>
+    </head>
+    <body>
+        <p id="clockdisp"></p>
+
+        <div id="daysContainer">
+            <span class="day">SUN</span>
+            <span class="day">MON</span>
+            <span class="day">TUE</span>
+            <span class="day">WED</span>
+            <span class="day">THU</span>
+            <span class="day">FRI</span>
+            <span class="day">SAT</span>
+        </div>
+
+        <p id="dateDisplay"></p>  
+
+        
+        <div class="dateContainer">
+            <div class="dateItem">
+                <p id="dayDisplay"></p>
+                <p class="label">Day</p>
+            </div>
+            <div class="dateItem">
+                <p id="monthDisplay"></p>
+                <p class="label">Month</p>
+            </div>
+            <div class="dateItem">
+                <p id="yearDisplay"></p>
+                <p class="label">Year</p>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            function showTime() 
+            {
+                var d = new Date();
+
+                var h = d.getHours();
+                var m = d.getMinutes();
+                var s = d.getSeconds();
+                var day = d.getDay();
+                var date = new Date();
+
+                var dayNum = date.getDate();  
+                var month = date.getMonth()+1;  
+                var year = date.getFullYear() % 100; 
+
+                
+                var session = "AM";
+
+                if (h == 0) 
+                {
+                    h = 12;
+                }
+                if (h > 12) 
+                {
+                    h -= 12;
+                    session = "PM";
+                }
+
+                h = h < 10 ? "0" + h : h;
+                m = m < 10 ? "0" + m : m;
+                s = s < 10 ? "0" + s : s;
+
+                dayNum = dayNum < 10 ? "0" + dayNum : dayNum;
+                month = month < 10 ? "0" + month : month;
+                year = year < 10 ? "0" + year : year;
+
+                var time = h + ":" + m + ":" + s + " " + session;
+                document.getElementById('clockdisp').innerText = time;
+
+                var days = document.querySelectorAll(".day");
+                days.forEach(function(dayElem, index) 
+                {
+                    if (index === day) 
+                    {
+                        dayElem.classList.add("active-day");
+                    } 
+                    else 
+                    {
+                        dayElem.classList.remove("active-day");
+                    }
+                });
+
+              
+
+                
+                document.getElementById("dayDisplay").innerText = dayNum;
+                document.getElementById("monthDisplay").innerText = month;
+                document.getElementById("yearDisplay").innerText = year;
+
+                setTimeout(showTime, 999);
+            }
+
+            showTime();
+        </script>
+    </body>
+</html>
