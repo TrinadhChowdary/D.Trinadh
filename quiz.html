@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz game</title>
+    <style>
+        .btn {
+            padding: 10px;
+            margin: 10px 0px;
+            font-weight: 500;
+            width: 100%;
+            border: 1px solid black;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+
+        .btn:hover {
+            background-color: lightskyblue;
+            color: white;
+        }
+        .btn:disabled {
+    cursor:not-allowed;
+    opacity: 0.6;
+}
+
+        #nextbtn {
+            background-color: green;
+            color: white;
+            padding: 10px;
+            width: 100px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 10px;
+            border: 1px solid black;
+            display: block;
+            margin: 20px auto;
+        }
+
+        body {
+            background-color: darkgrey;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: sans-serif;
+        }
+
+        .app {
+            background-color: white;
+            padding: 30px;
+            border: 2px solid #ccc;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <h1>Quiz</h1>
+        <hr>
+        <div class="quiz">
+            <h2 id="question">Question</h2>
+            <div id="ans-button"></div>
+            <button id="nextbtn">Next</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Which is the largest planet in our solar system?",
+                answers: [
+                    { text: "Earth", correct: false },
+                    { text: "Venus", correct: false },
+                    { text: "Jupiter", correct: true },
+                    { text: "Saturn", correct: false }
+                ]
+            },
+            {
+                question: "Who is known as the “Father of the Nation” in India?",
+                answers: [
+                    { text: "Sardar Patel", correct: false },
+                    { text: "Mahatma Gandhi", correct: true },
+                    { text: "Bhagat Singh", correct: false },
+                    { text: "Jawaharlal Nehru", correct: false }
+                ]
+            },
+            {
+                question: "What is the boiling point of water at sea level?",
+                answers: [
+                    { text: "50°C", correct: false },
+                    { text: "100°C", correct: true },
+                    { text: "90°C", correct: false },
+                    { text: "110°C", correct: false }
+                ]
+            },
+            {
+                question: "How many continents are there in the world?",
+                answers: [
+                    { text: "7", correct: true },
+                    { text: "8", correct: false },
+                    { text: "9", correct: false },
+                    { text: "6", correct: false }
+                ]
+            },
+            {
+                question: "Who was the first man to step on the moon?",
+                answers: [
+                    { text: "Buzz Aldrin", correct: false },
+                    { text: "Neil Armstrong", correct: true },
+                    { text: "Yuri Gagarin", correct: false },
+                    { text: "Michael Collins", correct: false }
+                ]
+            },
+            {
+                question: "What is the hardest natural substance on Earth?",
+                answers: [
+                    { text: "Gold", correct: false },
+                    { text: "Quartz", correct: false },
+                    { text: "Iron", correct: false },
+                    { text: "Diamond", correct: true }
+                ]
+            },
+            {
+                question: "Which country is known as the Land of the Rising Sun?",
+                answers: [
+                    { text: "India", correct: false },
+                    { text: "China", correct: false },
+                    { text: "Japan", correct: true },
+                    { text: "Korea", correct: false }
+                ]
+            },
+            {
+                question: "What is the capital of America?",
+                answers: [
+                    { text: "Los Angeles", correct: false },
+                    { text: "Chicago", correct: false },
+                    { text: "New York", correct: false },
+                    { text: "Washington, D.C.", correct: true }
+                ]
+            },
+            {
+                question: "Which is the longest river in the world?",
+                answers: [
+                    { text: "Amazon River", correct: false },
+                    { text: "Nile River", correct: true },
+                    { text: "Mississippi River", correct: false },
+                    { text: "Yangtze River", correct: false }
+                ]
+            },
+            {
+                question: "What is the capital of Australia?",
+                answers: [
+                    { text: "Sydney", correct: false },
+                    { text: "Melbourne", correct: false },
+                    { text: "Canberra", correct: true },
+                    { text: "Brisbane", correct: false }
+                ]
+            }
+        ];
+
+        const questionelement = document.getElementById('question');
+        const answerbutton = document.getElementById('ans-button');
+        const nextbutton = document.getElementById('nextbtn');
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            nextbutton.innerHTML = "Next";
+            showQuestion();
+        }
+
+        function showQuestion() {
+            resetState();
+            let currentQuestion = questions[currentQuestionIndex];
+            questionelement.innerHTML = currentQuestion.question;
+
+            currentQuestion.answers.forEach(answer => {
+                const button = document.createElement("button");
+                button.innerHTML = answer.text;
+                button.classList.add("btn");
+                if (answer.correct) {
+                    button.dataset.correct = answer.correct;
+                }
+                button.addEventListener("click", selectAnswer);
+                answerbutton.appendChild(button);
+            });
+        }
+
+        function resetState() {
+            nextbutton.style.display = "none";
+            while (answerbutton.firstChild) {
+                answerbutton.removeChild(answerbutton.firstChild);
+            }
+        }
+
+        function selectAnswer(e) {
+            const selectedBtn = e.target;
+            const isCorrect = selectedBtn.dataset.correct === "true";
+            if (isCorrect) {
+                selectedBtn.style.backgroundColor = "lightgreen";
+                score++;
+            } else {
+                selectedBtn.style.backgroundColor="lightcoral";
+            }
+
+            Array.from(answerbutton.children).forEach(button => {
+                button.disabled = true;
+                if (button.dataset.correct === "true") {
+                    button.style.backgroundColor = "green";
+                }
+            });
+
+            nextbutton.style.display = "block";
+        }
+
+        function showScore() {
+            resetState();
+            questionelement.innerHTML = `You scored ${score} out of ${questions.length}!`;
+            nextbutton.innerHTML = "Play Again";
+            nextbutton.style.display = "block";
+        }
+
+        function handleNextButton() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                showScore();
+            }
+        }
+
+        nextbutton.addEventListener("click", () => {
+            if (currentQuestionIndex < questions.length) {
+                handleNextButton();
+            } else {
+                startQuiz();
+            }
+        });
+
+        startQuiz();
+    </script>
+</body>
+</html>
