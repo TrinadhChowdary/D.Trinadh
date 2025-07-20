@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cart Quantity</title>
+</head>
+<body>
+
+    <h2 id="display">Cart Quantity: 0</h2>
+
+    <button onclick="updateCart(0)">Show Quantity</button>
+    <button onclick="updateCart(1)">Add To Cart</button>
+    <button onclick="updateCart(2)">+2</button>
+    <button onclick="updateCart(3)">+3</button>
+    <button onclick="updateCart(-1)">-1</button>
+    <button onclick="resetCart()">Reset Cart</button>
+
+    <script>
+        let cartq = 0;
+
+        function updateCart(amount) {
+            cartq += amount;
+
+            if (cartq < 0) 
+            {
+                cartq = 0;
+            }
+
+            document.getElementById("display").innerText = `Cart Quantity: ${cartq}`;
+        }
+
+        function resetCart() 
+        {
+            cartq = 0;
+            document.getElementById("display").innerText = "Cart was reset. Cart Quantity: 0";
+        }
+    </script>
+
+</body>
+</html>
