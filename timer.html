@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Stopwatch, Timer & Alarm</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background-color: beige;
+    }
+    nav {
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 8px 12px;
+      margin-right: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      position: relative;
+      border-radius: 5px;
+    }
+    button:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      top: -25px;
+      background-color: black;
+      color: white;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    #start {
+      width:25%;
+      background-color:lightcoral;
+      color: black;
+    }
+    #start:hover {
+      opacity:0.8;
+    }
+    #start:active {
+      background-color: greenyellow;
+    }
+    .section {
+      display: none;
+      padding: 10px;
+    }
+    .active {
+      display: block;
+    }
+    #timerDisplay,
+    #timedisp,
+    .alarmCountdown {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+    button:disabled {
+      cursor: not-allowed;
+      background-color: #ccc;
+      color: #666;
+    }
+    .alarmContainer {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <button id="stopwatchBtn" onclick="showSection('stopwatchSection', this)">Stopwatch</button>
+    <button id="timerBtn" onclick="showSection('timerSection', this)">Timer</button>
+    <button id="alarmBtn" onclick="showSection('alarmSection', this)">Alarm</button>
+  </nav>
+
+  <!-- Stopwatch Section -->
+  <div id="stopwatchSection" class="section">
+    <h2>Stop Watch</h2>
+    <div id="timerDisplay">00:00:00</div>
+    <button id="start">Start</button>
+    <button id="resume" style="display:none;">▶</button>
+    <button id="pause" style="display:none;">⏸</button>
+    <button id="restart" style="display:none;">🔄</button>
+  </div>
+
+  <!-- Timer Section -->
+  <div id="timerSection" class="section">
+    <h2>Timer Mode</h2>
+    <div id="timedisp">05:00</div>
+    <button onclick="addTime(5)">+5.00</button>
+    <button onclick="addTime(10)">+10.00</button>
+    <button onclick="addTime(20)">+20.00</button>
+    <button onclick="addTime(30)">+30.00</button>
+    <br /><br />
+    <button id="startTimerBtn" onclick="startTimer()">▶</button>
+    <button id="resetTimerBtn" onclick="resetTimer()">🔄 </button>
+    <button id="closeTimerBtn" onclick="closetimer()" style="display:none;">⏹ Close</button>
+  </div>
+
+  <!-- Alarm Section -->
+  <div id="alarmSection" class="section">
+    <h2>Alarm</h2>
+    <button id="addalarm" style="font-size:16px;" data-tooltip="Add a new alarm">+</button>
+  </div>
+
+  <audio id="alarmSound" loop>
+    <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" type="audio/mpeg" />
+    Sorry Your browser does not support the audio.
+  </audio>
+
+  <script>
+    
+    function showSection(id, btn) 
+    {
+      
+      document.querySelectorAll(".section").forEach((sec) => {
+        sec.classList.remove("active");
+      });
+      document.getElementById(id).classList.add("active");
+
+      // Reset all button styles
+      document.querySelectorAll("nav button").forEach((b) => {
+        b.style.backgroundColor = "";
+        b.style.color = "black";
+      }
+    );
+
+      // Highlight clicked button
+      btn.style.backgroundColor = "gray";
+      btn.style.color = "white";
+    }
+    // Default active section
+    showSection("stopwatchSection", document.getElementById("stopwatchBtn"));
+
+    // Stopwatch
+    let timerDisplay = document.getElementById("timerDisplay");
+    let startBtn = document.getElementById("start");
+    let pauseBtn = document.getElementById("pause");
+    let resumeBtn = document.getElementById("resume");
+    let restartBtn = document.getElementById("restart");
+
+    let running = false;
+    let totalsec = 0;
+    let timer = null;
+
+    function updateTimer() {
+      totalsec++;
+      let hrs = Math.floor(totalsec / 3600);
+      let mins = Math.floor((totalsec % 3600) / 60);
+      let secs = totalsec % 60;
+      timerDisplay.textContent =
+        hrs.toString().padStart(2, "0") +
+        ":" +
+        mins.toString().padStart(2, "0") +
+        ":" +
+        secs.toString().padStart(2, "0");
+    }
+
+    startBtn.onclick = function () {
+      if (!running) {
+        timer = setInterval(updateTimer, 1000);
+        running = true;
+        startBtn.style.display = "none";
+        pauseBtn.style.display = "inline-block"; 
+        resumeBtn.style.display = "inline-block"; 
+        restartBtn.style.display = "inline-block";
+        pauseBtn.disabled = false;
+        resumeBtn.disabled = true;
+        restartBtn.disabled = false;
+      }
+    };
+    pauseBtn.onclick = function () {
+      if (running) {
+        clearInterval(timer);
+        running = false;
+        pauseBtn.disabled = true;
+        resumeBtn.disabled = false;
+      }
+    };
+    resumeBtn.onclick = function () {
+      if (!running) {
+        timer = setInterval(updateTimer, 1000);
+        running = true;
+        resumeBtn.disabled = true;
+        pauseBtn.disabled = false;
+      }
+    };
+    restartBtn.onclick = function () {
+      clearInterval(timer);
+      running = false;
+      totalsec = 0;
+      timerDisplay.textContent = "00:00:00";
+      startBtn.style.display = "inline-block"; 
+      pauseBtn.style.display = "none";         
+      resumeBtn.style.display = "none";
+      restartBtn.style.display = "none";
+    };
+
+    // Timer
+    let timerSeconds = 300;
+    let timerInterval = null;
+
+    function updateTimerDisplay() {
+      let mins = Math.floor(timerSeconds / 60);
+      let secs = timerSeconds % 60;
+      document.getElementById("timedisp").textContent =
+        mins.toString().padStart(2, "0") + ":" + secs.toString().padStart(2, "0");
+    }
+    function addTime(minutes) {
+      timerSeconds += minutes * 60;
+      updateTimerDisplay();
+    }
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      document.getElementById("closeTimerBtn").style.display = "none";
+
+      timerInterval = setInterval(() => {
+        if (timerSeconds > 0) {
+          timerSeconds--;
+          updateTimerDisplay();
+        } else {
+          clearInterval(timerInterval);
+          alarmSound.play();
+          document.getElementById("closeTimerBtn").style.display = "inline-block";
+        }
+      }, 1000);
+    }
+    function closetimer() {
+      clearInterval(timerInterval);
+      alarmSound.pause();
+      document.getElementById("closeTimerBtn").style.display = "none";
+    }
+    function resetTimer() {
+      clearInterval(timerInterval);
+      timerSeconds = 300;
+      updateTimerDisplay();
+    }
+    updateTimerDisplay();
+
+    
+
+  // Alarm
+
+  
+  const addAlarmBtn = document.getElementById("addalarm");
+  const alarmSection = document.getElementById("alarmSection");
+  const alarmSound = document.getElementById("alarmSound");
+
+  // Load alarms from localStorage on page load
+  window.onload = function () {
+    let savedAlarms = JSON.parse(localStorage.getItem("alarms")) || [];
+    savedAlarms.forEach(alarm => createAlarmUI(alarm.purpose, alarm.time));
+  };
+
+  addAlarmBtn.onclick = function () {
+    createAlarmUI("", "");
+  };
+
+  function createAlarmUI(purposeValue, timeValue) {
+    const AlarmDiv = document.createElement("div");
+    AlarmDiv.classList.add("alarmContainer");
+
+    const Purpose = document.createElement("input");
+    Purpose.type = "text";
+    Purpose.placeholder = "Purpose of alarm";
+    Purpose.style.fontSize = "16px";
+    Purpose.value = purposeValue;  // Load from storage if available
+
+    const SetBtn = document.createElement("button");
+    SetBtn.textContent = "Set Alarm";
+
+    const Input = document.createElement("input");
+    Input.type = "time";
+    Input.style.fontSize = "16px";
+    Input.value = timeValue; // Load from storage if available
+
+    const ClearBtn = document.createElement("button");
+    ClearBtn.textContent = "Clear";
+    ClearBtn.disabled = true;
+
+    const DeleteBtn = document.createElement("button");
+    DeleteBtn.textContent = "Delete";
+
+    const Countdown = document.createElement("p");
+    Countdown.classList.add("alarmCountdown");
+
+    AlarmDiv.appendChild(Purpose);
+    AlarmDiv.appendChild(SetBtn);
+    AlarmDiv.appendChild(Input);
+    AlarmDiv.appendChild(ClearBtn);
+    AlarmDiv.appendChild(DeleteBtn);
+    AlarmDiv.appendChild(Countdown);
+
+    alarmSection.appendChild(AlarmDiv);
+
+    let alarmTimeout = null;
+    let countdownInterval = null;
+
+    function saveAlarmsToLocalStorage() {
+      const alarms = [];
+      document.querySelectorAll(".alarmContainer").forEach(div => {
+        const purpose = div.querySelector("input[type=text]").value;
+        const time = div.querySelector("input[type=time]").value;
+        if (purpose && time) {
+          alarms.push({ purpose, time });
+        }
+      });
+      localStorage.setItem("alarms", JSON.stringify(alarms));
+    }
+
+    function updateCountdown() {
+      if (!Input.value) return;
+      const now = new Date();
+      let [hours, minutes] = Input.value.split(":").map(Number);
+
+      let alarmDate = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        hours,
+        minutes,
+        0
+      );
+      if (alarmDate < now) alarmDate.setDate(alarmDate.getDate() + 1);
+
+      let diff = alarmDate - now;
+      let totalSecondsLeft = Math.floor(diff / 1000);
+      let diffHours = Math.floor(totalSecondsLeft / 3600);
+      let diffMinutes = Math.floor((totalSecondsLeft % 3600) / 60);
+      let diffSeconds = totalSecondsLeft % 60;
+
+      if (totalSecondsLeft <= 10) {
+        Countdown.textContent =
+          "Time left: " +
+          diffHours.toString().padStart(2, "0") +
+          ":" +
+          diffMinutes.toString().padStart(2, "0") +
+          ":" +
+          diffSeconds.toString().padStart(2, "0");
+      } else {
+        Countdown.textContent = "";
+      }
+    }
+
+    SetBtn.onclick = function () {
+      if (!Input.value) {
+        alert("Please select a time!");
+        return;
+      }
+      if (!Purpose.value.trim()) {
+        alert("Please enter the purpose of the alarm!");
+        return;
+      }
+
+      Input.disabled = true;
+      Purpose.disabled = true;
+      SetBtn.disabled = true;
+      ClearBtn.disabled = false;
+
+      countdownInterval = setInterval(updateCountdown, 1000);
+
+      const now = new Date();
+      let [hours, minutes] = Input.value.split(":").map(Number);
+      let alarmDate = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        hours,
+        minutes,
+        0
+      );
+      if (alarmDate < now) alarmDate.setDate(alarmDate.getDate() + 1);
+
+      let diff = alarmDate - now;
+      let diffHours = Math.floor(diff / (1000 * 60 * 60));
+      let diffMinutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+      alert(
+        "Alarm set successfully for " +
+          diffHours.toString().padStart(2, "0") +
+          "hrs:" +
+          diffMinutes.toString().padStart(2, "0") +
+          "min"
+      );
+
+      // 🔹 Save to localStorage
+      saveAlarmsToLocalStorage();
+
+      alarmTimeout = setInterval(() => {
+        const now = new Date();
+        const currentTime =
+          now.getHours().toString().padStart(2, "0") +
+          ":" +
+          now.getMinutes().toString().padStart(2, "0");
+        if (currentTime === Input.value) {
+          alarmSound.play();
+          clearInterval(alarmTimeout);
+          clearInterval(countdownInterval);
+          Countdown.textContent = "⏰ " + Purpose.value;
+        }
+      }, 1000);
+    };
+
+    ClearBtn.onclick = function () {
+      clearInterval(alarmTimeout);
+      clearInterval(countdownInterval);
+      Input.disabled = false;
+      Purpose.disabled = false;
+      SetBtn.disabled = false;
+      ClearBtn.disabled = true;
+      Countdown.textContent = "";
+      alarmSound.pause();
+      alarmSound.currentTime = 0;
+      alert("Alarm cleared!");
+      saveAlarmsToLocalStorage();
+    };
+
+    DeleteBtn.onclick = function () {
+      clearInterval(alarmTimeout);
+      clearInterval(countdownInterval);
+      alarmSound.pause();
+      alarmSection.removeChild(AlarmDiv);
+      saveAlarmsToLocalStorage();
+    };
+  }
+
+
+  </script>
+</body>
+</html>
